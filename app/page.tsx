@@ -3,7 +3,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { LineChart, BarChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
-import { Settings, Bell, X, Moon, Droplet, Monitor, Plus, Check, Calendar, Award, Edit, Trash2, ChevronRight, ChevronDown, User } from 'lucide-react';
+import { Settings, Bell, X, Moon, Droplet, Monitor, Plus, Award, Edit, Trash2, ChevronRight, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import _ from 'lodash';
 
@@ -749,9 +749,7 @@ function RemindersModal({ onClose, habits }: { onClose: () => void, habits: Habi
 // Habit Details Modal Component
 function HabitDetailsModal({ 
   habit, 
-  onClose,
-  onUpdateProgress
-}: { 
+  onClose}: { 
   habit: Habit, 
   onClose: () => void,
   onUpdateProgress: (id: string, value: number) => void
@@ -1522,7 +1520,7 @@ function Analytics({ habits }: { habits: Habit[] }) {
                   })}
                 />
                 <Legend />
-                {filteredHabits.map((habit, index) => (
+                {filteredHabits.map((habit) => (
                   <Line 
                     key={habit.id}
                     type="monotone"

@@ -1,0 +1,132 @@
+'use client';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+
+const mockData = [
+  { day: "Mon", sleep: 7, water: 2, screen: 5 },
+  { day: "Tue", sleep: 6, water: 2.5, screen: 4 },
+  { day: "Wed", sleep: 8, water: 3, screen: 6 },
+  { day: "Thu", sleep: 7.5, water: 2, screen: 7 },
+  { day: "Fri", sleep: 6.5, water: 2.2, screen: 4 },
+  { day: "Sat", sleep: 9, water: 3.1, screen: 3 },
+  { day: "Sun", sleep: 8.2, water: 3, screen: 2 },
+];
+
+export default function HabitTrackerApp() {
+  const [sleepGoal, setSleepGoal] = useState(8);
+  const [waterGoal, setWaterGoal] = useState(3);
+  const [screenGoal, setScreenGoal] = useState(4);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [streak, setStreak] = useState(5);
+
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
+  return (
+    <div className="font-sans bg-gray-50 min-h-screen text-gray-900">
+      {/* Navbar */}
+      <nav className="flex items-center justify-between px-6 py-4 bg-white shadow-md">
+        <h1 className="text-2xl font-bold">HabitTrackr</h1>
+        <button onClick={openModal} className="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition">Settings</button>
+      </nav>
+
+      {/* Landing Section */}
+      <header className="text-center mt-10 mb-8">
+        <motion.h2 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-3xl font-semibold">Your Weekly Habit Summary</motion.h2>
+        <p className="mt-2 text-gray-600">Track your sleep, hydration, and screen time</p>
+      </header>
+
+      {/* Graphs */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6">
+        {["sleep", "water", "screen"].map((key, idx) => (
+          <div key={key} className="bg-white p-4 rounded-2xl shadow hover:shadow-lg transition">
+            <h3 className="font-semibold mb-2 capitalize">{key} Progress</h3>
+            <ResponsiveContainer width="100%" height={200}>
+              <LineChart data={mockData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="day" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey={key} stroke="#6366f1" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        ))}
+      </section>
+
+      {/* Daily Goals Check-in */}
+      <section className="mt-10 px-6">
+        <div className="bg-white p-6 rounded-2xl shadow-md">
+          <h2 className="text-xl font-bold mb-4">Daily Goals Check-In</h2>
+          {["Sleep (hrs)", "Water (L)", "Screen Time (hrs)"].map((label, idx) => (
+            <div key={idx} className="mb-4">
+              <label className="block text-sm font-medium mb-1">{label}</label>
+              <input
+                type="range"
+                min="0"
+                max="12"
+                value={[sleepGoal, waterGoal, screenGoal][idx]}
+                onChange={(e) => {
+                  const val = parseFloat(e.target.value);
+                  if (idx === 0) setSleepGoal(val);
+                  if (idx === 1) setWaterGoal(val);
+                  if (idx === 2) setScreenGoal(val);
+                }}
+                className="w-full accent-indigo-600"
+              />
+              <p className="text-sm text-gray-700 mt-1">{[sleepGoal, waterGoal, screenGoal][idx]}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Streak Tracker */}
+      <section className="mt-10 px-6">
+        <div className="bg-white p-6 rounded-2xl shadow-md text-center">
+          <h2 className="text-lg font-semibold mb-2">🔥 Current Streak</h2>
+          <motion.p
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="text-4xl font-bold text-indigo-600"
+          >
+            {streak} Days
+          </motion.p>
+          <button
+            onClick={() => setStreak((prev) => prev + 1)}
+            className="mt-4 bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition"
+          >
+            Log Today’s Completion
+          </button>
+        </div>
+      </section>
+
+      {/* Modal for Settings */}
+      {modalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            className="bg-white p-6 rounded-2xl w-full max-w-md shadow-xl"
+          >
+            <h2 className="text-xl font-bold mb-4">Settings</h2>
+            <p className="text-sm text-gray-600 mb-4">Customize notifications, reminders, and more.</p>
+            <button
+              onClick={closeModal}
+              className="mt-2 bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition"
+            >
+              Close
+            </button>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Footer */}
+      <footer className="mt-20 px-6 py-6 text-center text-sm text-gray-500">
+        Built with ❤️ using Next.js, TypeScript, and Tailwind CSS
+      </footer>
+    </div>
+  );
+}

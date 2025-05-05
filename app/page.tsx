@@ -1191,7 +1191,7 @@ function Dashboard({
               
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span>Today's Progress</span>
+                  <span>Today`&apos`s Progress</span>
                   <span className={habit.progress >= 1 ? "text-green-500" : "text-gray-500"}>
                     {Math.round(habit.progress * 100)}%
                   </span>
